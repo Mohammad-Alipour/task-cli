@@ -10,7 +10,7 @@ A lightweight CLI tool to manage tasks using **Go**. Tasks are stored in a JSON 
 ## 🛠 Installation & Usage
 Clone the repository:
 ```sh
-git clone https://github.com/username/task-cli.git
+git clone https://github.com/Mohammad-Alipour/task-cli.git
 cd task-cli
 go mod tidy
 
