@@ -1,43 +1,57 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
-
-	"github.com/spf13/cobra"
+	"encoding/json"
 )
 
-var task string
+const taskFile = "tasks.json"
 
-var addCmd = &cobra.Command{
-	Use:   "add",
-	Short: "Add a new task",
-	Run: func(cmd *cobra.Command, args []string) {
-		tasks := loadTasks()
-		tasks = append(tasks, task)
-		saveTasks(tasks)
-		fmt.Println("✅ Task added:", task)
-	},
+
+type Task struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }
 
-func init() {
-	addCmd.Flags().StringVarP(&task, "task", "t", "", "Task description")
-	rootCmd.AddCommand(addCmd)
-}
 
-func loadTasks() []string {
-	file, err := os.ReadFile("tasks.json")
-	if err != nil {
-		return []string{}
+func AddTask(taskName string) {
+	tasks := loadTasks()
+
+	
+	newID := 1
+	if len(tasks) > 0 {
+		newID = tasks[len(tasks)-1].ID + 1
 	}
-	var tasks []string
+
+
+	newTask := Task{ID: newID, Name: taskName}
+	tasks = append(tasks, newTask)
+
+	
+	saveTasks(tasks)
+	fmt.Println("Task added:", taskName)
+}
+
+
+func loadTasks() []Task {
+	file, err := os.ReadFile(taskFile)
+	if err != nil {
+		return []Task{}
+	}
+
+	var tasks []Task
 	json.Unmarshal(file, &tasks)
 	return tasks
 }
 
-func saveTasks(tasks []string) {
-	data, _ := json.Marshal(tasks)
-	os.WriteFile("tasks.json", data, 0644)
+// ذخیره تسک‌ها در فایل
+func saveTasks(tasks []Task) {
+	data, err := json.MarshalIndent(tasks, "", "  ")
+	if err != nil {
+		fmt.Println("Error saving tasks:", err)
+		return
+	}
+	os.WriteFile(taskFile, data, 0644)
 }
 
