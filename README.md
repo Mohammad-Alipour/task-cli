@@ -14,10 +14,10 @@ git clone https://github.com/Mohammad-Alipour/task-cli.git
 cd task-cli
 go mod tidy
 
-Add a new task:
+//Add a new task:
 
 go run main.go add --task "Learn Golang"
 
-List all tasks:
+//List all tasks:
 
 go run main.go list
